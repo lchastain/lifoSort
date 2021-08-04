@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 // This app models a set (rack) of test tubes containing colored balls,
-//   and then proceeds to sort them.
+//   and then proceeds to sort them according to color, with some specific sorting rules such as a ball may
+//   only move to another tube that is either empty, or the top ball in the non-full tube is the same color.
 
 public class LifoSort {
-    static int tubeCapacity = 4;
     static int tubeCount = 14;
 
     static Integer sourceTubeIndex;  // Since this var stays 'under the hood', we can use zero-based Vector indexing.
@@ -14,30 +14,9 @@ public class LifoSort {
     static TubeRack tubeRack;
     static ArrayList<String> currentRun;
 
-    public static void getValues() {
-        String theEntry;
-        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-
-        // Get the Max capacity of a container
-        System.out.print("What is the maximum capacity of a container? (default is 4):  ");
-        theEntry = myObj.nextLine();  // Read user input
-        if(!theEntry.isEmpty()) {
-            tubeCapacity = Integer.parseInt(theEntry);
-        }
-        System.out.println("Maximum container capacity is: " + tubeCapacity);  // Output user input
-
-        // How many containers (total, with content or not)
-        System.out.print("What is the total number of containers (regardless of initial content)? (default is 11):  ");
-        theEntry = myObj.nextLine();  // Read user input
-        if(!theEntry.isEmpty()) {
-            // I'm the only user; not going to idiot-proof the user entry.
-            tubeCount = Integer.parseInt(theEntry);
-        }
-        System.out.println("Number of containers is: " + tubeCount);  // Output user input
-    }
-
     private static void setup() {
         // Set the initial data.  This might eventually come from a file, or user input (but that would be quite tedious).
+        int tubeCapacity = 4;
         initialRackContent = new ItemColor[tubeCount][tubeCapacity];
         initialRackContent[0] = new ItemColor[]{ItemColor.LIMEGREEN, ItemColor.SKYBLUE, ItemColor.GREEN, ItemColor.PURPLE};
         initialRackContent[1] = new ItemColor[]{ItemColor.BROWN, ItemColor.GRAY, ItemColor.RED, ItemColor.ORANGE};

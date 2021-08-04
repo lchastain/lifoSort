@@ -1,0 +1,34 @@
+The uppercase of this file name has the effect of disabling the code autocompletion and suggestions as you type.
+
+
+4 Aug 2021
+No longer sure that the answer here is recursion.  New idea about the approach is to take the initial tableau and make
+a list of every possible single move from that point.  Then begin cycling thru those moves and after each one, snapshot
+the tableau and make a new list of possibilities, to be added to the worklist.  Eventually we will either have found a
+solution, or exhausted all possibilities.  The 'master list' will be a pair of 1: a tableau and 2: list of possible
+moves from that point.
+
+3 Aug 2021
+Changed from Integer colors to actual named enums.  This will make it easier to initialize in the future, without
+the need to change integer values for every new puzzle, and printouts will not need translation from a number to a
+color.  Major effect on all arrays, lists, etc.  Had to go from type <E> to type <ItemColor>.
+-------
+Made the adjustments needed to be able to get all the way through a first trial.  Now looking at how to set up and
+initiate a second trial.  Haven't yet encountered/had to handle a second-level (or deeper) reset within a trial.
+
+2 Aug 2021
+Began the process of making a 'move', evaluating the result, and going to the next step after that.  Loops at this
+stage are simplistic and fail quickly; need to refine so that a trial can get all the way to the 'end' and then
+begin recursion in order to go on to the next trial.
+
+1 Aug 2021
+Did the LIFO as a new TestTube class, worked on getting the initial setup into the app, and showing the contents of
+each tube.
+
+30 July 2021 - A new Java project; an app to solve the iPad 'Ball Sort Puzzle' game.
+Initial vision is to use a set of LIFO stacks and a brute-force approach.
+Cleared up the 'no package' warning by setting the containing folder as 'sources' via module settings.
+Upgraded my Java to 16.0.2.
+Next:  Implement a LIFO, and more -
+
+
