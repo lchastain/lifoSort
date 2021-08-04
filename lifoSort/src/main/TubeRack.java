@@ -1,18 +1,20 @@
 import java.util.ArrayList;
 
-// Models a 'rack' of TestTubes
+// Models a 'rack' of TestTubes with contents
 public class TubeRack extends ArrayList<TestTube<ItemColor>> {
-    int tubeCapacity;
-    int tubeCount;
-    //    Integer[][] initialRackContent;
-    ItemColor[][] initialRackContent;
+    final int tubeCapacity;
+    final int tubeCount;
+    final ItemColor[][] rackContent;
+    ArrayList<PossibleMove> possibleMoves;
 
 
-    public TubeRack(ItemColor[][] initialRackContent) {
+    public TubeRack(ItemColor[][] rackContent) {
         super();
-        this.initialRackContent = initialRackContent;
-        this.tubeCount = initialRackContent.length;
-        this.tubeCapacity = initialRackContent[0].length;
+        this.rackContent = rackContent;
+        this.tubeCount = rackContent.length;
+        this.tubeCapacity = rackContent[0].length;
+        loadRack();
+        findPossibilities();
     }
 
     // The logic prior to this method being called is believed to have avoided any situation that would be disallowed
@@ -42,18 +44,14 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         return true;
     }
 
-    // This method gives us the starting point, to which we will need to return after every
-    //   iteration of the recursive solution algorithm.
+    private void findPossibilities() {
+    }
+
+
+    // Set the content of each tube in the rack -
     void loadRack() {
-        // Set (or reset) the content of each tube -
         TestTube<ItemColor> tmpTube;
-//        for (int i = 0; i < tubeCount; i++) {
-//            tmpTube = new TestTube<>(tubeCapacity);
-//            ItemColor[] tubeContent = initialRackContent[i];
-//            tmpTube.setContent(tubeContent);
-//            add(tmpTube);
-//        }
-        for(ItemColor[] tubeContent: initialRackContent) {
+        for(ItemColor[] tubeContent: rackContent) {
             tmpTube = new TestTube<>(tubeCapacity);
             tmpTube.setContent(tubeContent);
             add(tmpTube);
@@ -78,11 +76,11 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                     // Therefore it is disqualified as a potential place to put the sourceValue.
                     // The only reason we have an 'else' at all is for debug/troubleshooting.  When the
                     // app is fully functional, this section may be disabled.
-                    String theMove = "From tube " + (LifoSort.sourceTubeIndex + 1) +
-                            ", did not move " + LifoSort.sourceValue + " (#" +
+                    String theMove = "Did not move " + LifoSort.sourceValue + " (#" +
                             ((tubeCapacity + 1) - get(LifoSort.sourceTubeIndex).size()) +
-                            ") to tube " + (i + 1) + " because it contains " + nextValue + " in its #" +
-                            ((tubeCapacity + 1) - get(i).size()) + " position.";
+                            " from tube " + (LifoSort.sourceTubeIndex + 1) +
+                            ") to tube " + (i + 1) + " because the top of that tube contains " + nextValue + " (in the #" +
+                            ((tubeCapacity + 1) - get(i).size()) + " slot).";
                     System.out.println(theMove);
                 }
             }

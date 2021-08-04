@@ -1,12 +1,29 @@
 The uppercase of this file name has the effect of disabling the code autocompletion and suggestions as you type.
+Not sure why that is, since the .log extension already does not have an associated file type, but you do get
+the annoyances when the filename and extension are in lowercase.
+
 
 
 4 Aug 2021
 No longer sure that the answer here is recursion.  New idea about the approach is to take the initial tableau and make
 a list of every possible single move from that point.  Then begin cycling thru those moves and after each one, snapshot
 the tableau and make a new list of possibilities, to be added to the worklist.  Eventually we will either have found a
-solution, or exhausted all possibilities.  The 'master list' will be a pair of 1: a tableau and 2: list of possible
+solution, or exhausted all possibilities.  The 'master list' will be a pair of 1: a tableau and 2: a list of possible
 moves from that point.
+----
+Enabled git for this project, to commit and preserve the initial approach that took in some user input for user
+specification of problem size.  Now that info is built in to the construction of the first tableau.
+----
+Continuing with finding all moves, how to avoid circular possibilities?  Need to review that master list each time
+a move is considered, to ensure that the new tableau would not be a repetition of one that is already in the list.  This
+means that tableaus should not be removed from the main list just because all their possibilities have been exhausted.
+Current thought is that the shortest path would always be the one you arrived at first; need to verify that.  But if
+not then when considering adding one you just take the one that has a shorter path to get there, vs just keeping the
+one that is already there.
+----
+Ok, so this might be recursion after all; when a TubeRack construction goes off to list its possibilities and then
+constructs more TubeRacks to cover those possibilities, that would be recursion.
+
 
 3 Aug 2021
 Changed from Integer colors to actual named enums.  This will make it easier to initialize in the future, without
