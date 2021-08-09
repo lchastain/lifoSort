@@ -27,7 +27,7 @@ enum ItemColor {
     // This is the pretty-printed version of the item color.
     @Override
     public String toString() {
-        return itemColor;
+        return getItemColor();
     }
 
 }

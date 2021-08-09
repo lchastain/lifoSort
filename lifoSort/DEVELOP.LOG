@@ -2,7 +2,36 @@ The uppercase of this file name has the effect of disabling the code autocomplet
 Not sure why that is, since the .log extension already does not have an associated file type, but you do get
 the annoyances when the filename and extension are in lowercase.
 
+8 Aug 2021 (birthday, in the cottage)
+Coded in the second disallowed move from the two listed yesterday.
+And then the first.  After some printout refactoring and fixing some minor oopsies, it finally began to
+work, although I had to run it one last time after adding in the dump of the moves for a successful
+sort (I had only been printing out the ~16K unsuccessful ones, not the one success.  Now - DONE!
 
+7 Aug 2021
+For a while, was stymied by a language restriction that you cannot alter a list while iterating through it.  So I
+thought I had the answer by going back to recursion, but that just exhaused the processing stack; both ideas dead
+ended.  Then arrived at a variation of the original idea, but do not iterate the list, just keep a reference to
+the latest unprocessed instance, while processing the list even as it grows by also keeping an indexer outside
+of the class doing the work.  This all worked, but then I finally arrived at the infinite loop of moves problem.
+Thought I could solve that by disallowing identical tableaus but that only helps outside of the explorePossibleMove
+processing, not within it, so it only solves a part of the problem.  This may be the last problem before having a
+final solution.  Working it now..
+----
+So to solve the issue within a possibility exploration, now disallowing a move that has been made before, by first
+checking for its presence in the 'currentRun' list.  This allowed the app to begin running continuously but now it
+goes on for hours, finding more than 120K of new possible racks before I stopped it, still unfinished.
+A printout of the currentRun showed that we only see the run of the final rack in the possibility chain and not
+the run from the initial rack, so had to add that to the constructor.  Did that, and
+then followed a random run of 38 moves thru the ipad app to see that there are some 'stupid' moves being made, that
+greatly expand the processing needed and cause wasteful (try/put back) moves.  Now need to disallow a move:
+1.  from the top of a non-full tube that contains all same color, to an empty tube.
+2.  from a tube where the next one(s) down are the same color, to a tube that does not have the capacity for all of
+    them.
+
+5 Aug 2021
+The finding of all possibilities is proceeding as a breadth-first search, while the trying of moves is depth-first.
+Working on finding a way to make them both work.
 
 4 Aug 2021
 No longer sure that the answer here is recursion.  New idea about the approach is to take the initial tableau and make
@@ -22,7 +51,11 @@ not then when considering adding one you just take the one that has a shorter pa
 one that is already there.
 ----
 Ok, so this might be recursion after all; when a TubeRack construction goes off to list its possibilities and then
-constructs more TubeRacks to cover those possibilities, that would be recursion.
+constructs more TubeRacks to cover those possibilities, that would be recursion.  Unless - the list growth occurs
+after a new list is constructed.
+----
+Need to move the currentRun info into the TubeRack.  Each rack should have one and it should NOT be a static top level
+member because it will become corrupted or lost with each reset.
 
 
 3 Aug 2021
