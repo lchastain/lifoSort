@@ -30,7 +30,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         // The point is, this rack has not yet been added to the list, so when calculating
         //    what our rack number will be, we need to take one more than the current size
         //    of the rack list.
-        if(LifoSort.rackList != null) rackNumber = LifoSort.rackList.size() + 1;
+        if (LifoSort.rackList != null) rackNumber = LifoSort.rackList.size() + 1;
 
 //        System.out.println("Found " + possibleMoves.size() + " possible moves in TubeRack #" + rackNumber);
 //        for (PossibleMove possibleMove : possibleMoves) {
@@ -53,7 +53,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                 ") to tube " + aTube.tubeNumber + " (#" +
                 (tubeCapacity - aTube.size()) + ")";
 
-        if(currentRun.contains(theMove)) {
+        if (currentRun.contains(theMove)) {
             return false;
         }
         sourceTube.pop(); // We already know the value; this is just to get it off the stack.
@@ -117,13 +117,13 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                 //   with the exact same tableau already in the list.
                 boolean beenThere = false;
                 // The 'beenThere' var name is more accurate than 'doneThat'; it may already be on the list but not yet processed.
-                for(TubeRack tubeRack: LifoSort.rackList) {
-                    if(Arrays.deepEquals(newTableau, tubeRack.rackContent)) {
+                for (TubeRack tubeRack : LifoSort.rackList) {
+                    if (Arrays.deepEquals(newTableau, tubeRack.rackContent)) {
                         beenThere = true;
                         break;
                     }
                 }
-                if(!beenThere) {
+                if (!beenThere) {
 //                    ArrayList<String> compositeListOfMoves = new ArrayList<>(previousMoves);
 //                    compositeListOfMoves.addAll(currentRun);
                     LifoSort.rackList.add(new TubeRack(newTableau, currentRun));
@@ -142,7 +142,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
             } else {
                 try {
                     sourceValue = get(sourceTubeIndex).peek();
-                } catch(EmptyStackException ese) { // We tried to look at a value from an empty tube; ignore and go on.
+                } catch (EmptyStackException ese) { // We tried to look at a value from an empty tube; ignore and go on.
                     //ese.printStackTrace();
                     return;
                 }
@@ -176,7 +176,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         for (int i = 0; i < tubeCount; i++) {  // We will use this index for considering a source Tube
             TestTube<ItemColor> sourceTube = get(i);  // Get the source tube
             if (sourceTube.empty()) continue;  // Cannot move an item from an empty tube.
-            if(sourceTube.sorted()) continue;  // Connot move an item from a sorted tube.
+            if (sourceTube.sorted()) continue;  // Connot move an item from a sorted tube.
             ItemColor sourceItem = sourceTube.peek(); // Get the source item
             int fromSlot = (tubeCapacity + 1) - sourceTube.size();
 
@@ -248,7 +248,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
             TestTube<ItemColor> aTube = get(i);
             if (aTube.full()) continue;  // Cannot move an item to a Tube that is already full.
             if (aTube.empty()) {
-                if(!sourceTube.homogenous()) {
+                if (!sourceTube.homogenous()) {
                     return popAndPush(aTube);
                 } else {
 //                    String theMove = "Did not move " + sourceValue + " (#" +
@@ -262,19 +262,34 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
             } else {
                 ItemColor nextValue = aTube.peek();
                 if (sourceValue.equals(nextValue)) {  // Otherwise it is a disallowed move.
+
+                    // When both source and destination tubes are homogenous (and we already know they are the same
+                    // color), disallow the move from the greater content tube to the lesser content tube.
+                    if (sourceTube.homogenous() && aTube.homogenous()) {
+                        if (sourceTube.size() > aTube.size()) {
+                            String theMove = "Did not move " + sourceValue + " (#" +
+                                    ((tubeCapacity + 1) - get(sourceTubeIndex).size()) +
+                                    " from tube " + (sourceTubeIndex + 1) +
+                                    ") to tube " + (i + 1) +
+                                    " because the directionality is illogical.  The reverse of this move will be allowed. ";
+                            System.out.println(theMove);
+                            return false;
+                        }
+                    }
+
+
+                    // When there is more than one of the same color at the top of the source tube, we disallow
+                    //   the move to the destination tube unless there is room enough there for ALL of them.
+                    //-------------------------------------------------------------------------------------------
                     destinationRemainingCapacity = aTube.maxCapacity - aTube.size();
 
                     // Find out how many of the sourceValue color are directly below the sourceValue.
                     int depth = 1;
                     int itemsToMove = 0;
-                    while(sourceTube.peek(depth++) == sourceValue) {
+                    while (sourceTube.peek(depth++) == sourceValue) {
                         itemsToMove++;
                     }
-                    // We only make this move if there is only one sourceValue color at the top of the source tube, OR
-                    //   there is enough room in the destination tube for ALL of them.
-                    if(itemsToMove <= destinationRemainingCapacity) {
-                        return popAndPush(aTube);
-                    } else {
+                    if (itemsToMove > destinationRemainingCapacity) {
 //                        String theMove = "Did not move " + sourceValue + " (#" +
 //                            ((tubeCapacity + 1) - get(sourceTubeIndex).size()) +
 //                            " from tube " + (sourceTubeIndex + 1) +
@@ -283,6 +298,9 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
 //                        System.out.println(theMove);
                         return false;
                     }
+                    //-------------------------------------------------------------------------------------------
+
+                    return popAndPush(aTube);
 //                } else {
                     // We don't need a 'continue' from here, because we are already at the bottom of the 'for' loop.
                     // But what it means is - the candidate destination tube was neither full nor empty, but it did

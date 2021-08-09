@@ -2,6 +2,14 @@ The uppercase of this file name has the effect of disabling the code autocomplet
 Not sure why that is, since the .log extension already does not have an associated file type, but you do get
 the annoyances when the filename and extension are in lowercase.
 
+9 Aug 2021
+Found another move to disallow:  When both source and dest are homogenous with the same color, do not move the
+greater to the lesser.  This helped with the final printout of moves but interestingly, added 5 minutes to my
+test case of 647; it seems that the Racks that it came to after making the 'stupid' move led to the solution
+sooner that getting there the 'right' way.  At least it did when using the logic I've employed for the brute
+force methodology.  Until I can find a smarter approach, willing to accept the downside and call it done;
+would rather have the higher quality solution even though it took longer to get there.
+
 8 Aug 2021 (birthday, in the cottage)
 Coded in the second disallowed move from the two listed yesterday.
 And then the first.  After some printout refactoring and fixing some minor oopsies, it finally began to
