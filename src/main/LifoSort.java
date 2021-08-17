@@ -87,7 +87,6 @@ public class LifoSort {
         return initialTableau;
     }
     private static ItemColor[][] setup649() {
-        // Set the initial data.  This might eventually come from a file, or user input (but that would be quite tedious).
         tubeCount = 14;
         int tubeCapacity = 4;
         ItemColor[][] initialTableau = new ItemColor[tubeCount][tubeCapacity];

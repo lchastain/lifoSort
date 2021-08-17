@@ -125,8 +125,6 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                     }
                 }
                 if (!beenThere) {
-//                    ArrayList<String> compositeListOfMoves = new ArrayList<>(previousMoves);
-//                    compositeListOfMoves.addAll(currentRun);
                     LifoSort.rackList.add(new TubeRack(newTableau, currentRun));
                 }
 
