@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.EmptyStackException;
 
 // Models a 'rack' of TestTubes with contents
+// This is not the graphical class; it is the one used in finding the puzzle solution.
 public class TubeRack extends ArrayList<TestTube<ItemColor>> {
     final int tubeCapacity;
     final int tubeCount;
@@ -152,7 +153,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         System.out.println("The rack is completely sorted!");
         System.out.println("Started: " + LifoSort.localDateTime);
         System.out.println("Ended: " + LocalDateTime.now());
-        System.exit(0);  // All Sorted!
+        if(LifoSort.textOnly) System.exit(0);  // All Sorted!
     } // end explorePossibility
 
     private void showMoves() {

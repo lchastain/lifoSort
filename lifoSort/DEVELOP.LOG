@@ -2,6 +2,48 @@ The uppercase of this file name has the effect of disabling the code autocomplet
 Not sure why that is, since the .log extension already does not have an associated file type, but you do get
 the annoyances when the filename and extension are in lowercase.
 
+17 Aug 2021
+Ok so maybe NOT done.  The solutions are taking too long; reconsidering the need to throw out the 'stupid' moves;
+will need to try that, IF the current run started yesterday ever ends.  And also thinking about automating the
+tube activation - upon an add, choose the first available tube, and deactivate before solving.
+
+
+16 Aug 2021
+0553 - Between later yesterday and right now, have implemented the ball addition logic to the active tube, and have
+put in the code for clearing all tubes as well as added a new button to clear just one tube, as opposed to the earlier
+idea of clicking on individual balls.  This decomplicates the mouse listener logic for the balls and gets us to the
+final touches - all that is needed for a working app is to handle the 'Solve' button.  May not work on the 'Help'
+button, since I'm the only user.  Also don't need to get fancy with button enablement; if the layout is not ready
+then we just don't send a tableau over to the solution finder portion; can do a printout about that, since the button
+will ultimately send control to the console at that point in any case.
+----
+Working on the 'solve' button, realize that the last two tubes in either layout should NOT be allowed to be added to.
+----
+So - added a gray background to those two tubes but that makes the four 'invisible' balls show up, looking like holes
+in the tube because they don't have an outline, and the overall effect is pretty cool; I like it this way.  After
+wiring in the 'solve' button with a simple actionhandler, it is all working, now with the optional UI mode, or using
+the original text only hardcoded tableau mode.  The runs seem to be pretty long, now, but they ARE getting correct
+results so - DONE!
+
+15 Aug 2021
+1109 - The layout switching is done.  Was problematic until started using removeAll().
+Next will be to work on ball-adding to tubes, from bottom up.  Currently only the first ball is done correctly.
+----
+1713 - Did that, but hard to test by hard-coding.  A better test will be when the ball selection row is active and
+we can see them going in in real-time.  But removal logic also not in yet.
+Then, coded in the single tube selection logic (not the best hierarchy, but it works, to make a red outline).
+
+14 Aug 2021
+Haven't been writing down a lot of the planning or progress, but a LOT of progress has been made.  I now have
+a ColorBall component, and have borrowed the ColumnPanel from Flashcards to get the rest of the way to the
+first tableau layout of 14 tubes.  Still working on adding balls, switching to 11 tubes, etc.  No work at
+all, yet, on activating any controls, but it looks great.
+----
+Now have both complete layouts; need to work on switching tube count as a result of the radio buttons.
+
+10 Aug 2021
+Decided to go ahead and add a UI whereby the initial tableau can be set.  Now, design, ideas, etc.
+
 9 Aug 2021
 Found another move to disallow:  When both source and dest are homogenous with the same color, do not move the
 greater to the lesser.  This helped with the final printout of moves but interestingly, added 5 minutes to my
@@ -14,7 +56,7 @@ would rather have the higher quality solution even though it took longer to get 
 Coded in the second disallowed move from the two listed yesterday.
 And then the first.  After some printout refactoring and fixing some minor oopsies, it finally began to
 work, although I had to run it one last time after adding in the dump of the moves for a successful
-sort (I had only been printing out the ~16K unsuccessful ones, not the one success.  Now - DONE!
+sort (I had only been printing out the ~16K unsuccessful ones, not the one final success.  Now - DONE!
 
 7 Aug 2021
 For a while, was stymied by a language restriction that you cannot alter a list while iterating through it.  So I

@@ -1,3 +1,8 @@
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,20 +12,39 @@ import java.util.Arrays;
 //   only move to another tube that is either empty, or the top ball in the non-full destination tube is the same color.
 
 public class LifoSort {
+    static boolean debug;
+    static boolean textOnly;
     static int tubeCount;
     static ArrayList<TubeRack> rackList;
     static TubeRack currentRack;
     static LocalDateTime localDateTime = LocalDateTime.now();
 
+    static {
+        // Defined in the java command, not the command-line arguments to the app.  Ex:   java -Ddebug LifoSort
+        debug = (System.getProperty("debug") != null);
+
+        if (debug) System.out.println("Debugging printouts on by Java startup flag.");
+    } // end static
+
+
+    // Description:  Prints the input parameter.
+    //   Does a 'flush' so that statements are not printed out
+    //   of order, when mixed with exceptions.
+    public static void debug(String s) {
+        if (debug) {
+            System.out.println(s);
+            System.out.flush();
+        } // end if
+    } // end debug
+
+
     private static ItemColor[][] setup() {
-//        return setup646();
+        return setup646();
 //        return setup647();
-        return setup649();
+//        return setup649();
     }
 
     // This sets the starting point for the solution to follow -
-    //   Two of the tubes will be completely empty.
-    //   The rest of the tubes will be at their maximum capacity; no more and no less.
     private static ItemColor[][] setup646() {
         // Set the initial data.  This might eventually come from a file, or user input (but that would be quite tedious).
         tubeCount = 11;
@@ -85,6 +109,7 @@ public class LifoSort {
         return initialTableau;
     }
 
+
     static void showTableau(ItemColor[][] theTableau) {
         for (ItemColor[] aTube : theTableau) {
             String tubeString = Arrays.asList (aTube).toString();
@@ -98,12 +123,65 @@ public class LifoSort {
 
     public static void main(String[] args) {
 
-        ItemColor[][] firstTableau = setup();
+        //---------------------------------------------------------------
+        // Evaluate input parameters, if any.
+        //---------------------------------------------------------------
+        debug("Evaluating parameters");
+        if (args.length > 0)
+            System.out.println("Number of args: " + args.length);
 
-//        System.out.println("The initial tableau: ");
-//        showTableau(firstTableau);
+        for (String startupFlag : args) { // Cycling thru them this way, position is irrelevant.
+            if (startupFlag.equals("-debug")) {
+                // This could be redundant, if the java option was used to turn on debug.
+                if (!debug) System.out.println("Debugging printouts on by command-line option.");
+                debug = true;
+            } else if (startupFlag.equals("-text")) {
+                textOnly = true;
+                System.out.println("Running in text-only mode.");
+            } else {
+                System.out.println("Parameter not handled: [" + startupFlag + "]");
+            } // end if/else
+        } // end for i
 
+
+        if(textOnly) {
+            ItemColor[][] firstTableau = setup();
+            //System.out.println("The initial tableau: ");
+            //showTableau(firstTableau);
+            solvePuzzle(firstTableau);
+        } else {
+            JFrame theFrame = new JFrame("Ball Sort Puzzle");
+
+            TubeRackPanel theTubeRack = new TubeRackPanel();
+            theFrame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    System.exit(0);
+                }
+            });
+
+            // Needed to override the 'metal' L&F for Swing components.
+            String laf = UIManager.getSystemLookAndFeelClassName();
+            try {
+                UIManager.setLookAndFeel(laf);
+            } catch (Exception ignored) {
+            }    // end try/catch
+            SwingUtilities.updateComponentTreeUI(theTubeRack);
+
+            theFrame.getContentPane().add(theTubeRack, "Center");
+            theFrame.pack();
+            theFrame.setSize(new Dimension(650, 640));
+            theFrame.setVisible(true);
+//            theFrame.setResizable(false);
+            theFrame.setLocationRelativeTo(null);
+        }
+
+    } // end main
+
+    static void solvePuzzle(ItemColor[][] firstTableau) {
         // Create a rack to hold the test tubes
+        System.out.println("The initial tableau: ");
+        showTableau(firstTableau);
+
         TubeRack firstRack = new TubeRack(firstTableau, new ArrayList<>());
 
         // Create a list of racks and add in the first one
@@ -118,16 +196,19 @@ public class LifoSort {
         while(true) {
             System.out.println("Exploring possibilities for rack # " + (currentRackIndex+1) + " of " + rackList.size());
             currentRack.explorePossibilities();
+            if(currentRack.sorted()) break;
             currentRackIndex++;
 
             if(currentRackIndex == rackList.size()) {
                 System.out.println("All possibilities have been explored, no solution found!");
-                System.exit(0);
+                System.out.println("Started: " + LifoSort.localDateTime);
+                System.out.println("Ended: " + LocalDateTime.now());
+                if(textOnly) System.exit(0);
+                else break;
             } else {
                 currentRack = rackList.get(currentRackIndex);
             }
         }
-
-    } // end main
+    }
 
 } // end LifoSort
