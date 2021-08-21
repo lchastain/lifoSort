@@ -4,8 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
+import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import layout.*;
 
@@ -28,8 +31,6 @@ public class TubeRackPanel extends JPanel {
         FOURTEEN
     }
 
-    ;
-
     // Buttons:  Clear, Solve, Help
     // Clear will clear all tubes; individual ones can be cleared by clicking on unwanted content.
     // Solve button disabled until tableau complete
@@ -49,7 +50,7 @@ public class TubeRackPanel extends JPanel {
         ActionListener rbListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(activeTube != null) {
+                if (activeTube != null) {
                     activeTube.lineColor = Color.WHITE;
                     activeTube.repaint();
                     activeTube = null;
@@ -194,12 +195,15 @@ public class TubeRackPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(TubeRackPanel.activeTube == null) {
-                    System.out.println("You must select a tube before adding a ball.");
-                } else {
-                    ColorBall cb = (ColorBall) e.getSource();
-                    TubeRackPanel.activeTube.add(new ColorBall(cb.getItemColor()));
+                if((TubeRackPanel.activeTube == null) || TubeRackPanel.activeTube.full()) {
+                    if (!activateFirstAvailableTube()) {
+                        System.out.println("No available tube!");
+                        return;
+                    }
                 }
+                ColorBall cb = (ColorBall) e.getSource();
+                activeTube.add(new ColorBall(cb.getItemColor()));
+                if(activeTube.full()) activeTube.setActive(false);
             }
         };
 
@@ -233,7 +237,7 @@ public class TubeRackPanel extends JPanel {
         ballChoiceRow.add(cbBlue);
         ballChoiceRow.setBackground(Color.DARK_GRAY);
         int ballChoiceCount = ballChoiceRow.getComponentCount();
-        for(int i=0; i<ballChoiceCount; i++) {
+        for (int i = 0; i < ballChoiceCount; i++) {
             ColorBall cb = (ColorBall) ballChoiceRow.getComponent(i);
             cb.addMouseListener(ma); // Add the mouse adapter as a listener
         }
@@ -256,7 +260,7 @@ public class TubeRackPanel extends JPanel {
         clearActiveTubeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(TubeRackPanel.activeTube != null) {
+                if (TubeRackPanel.activeTube != null) {
                     activeTube.clear();
                     activeTube.revalidate();
                 }
@@ -269,12 +273,12 @@ public class TubeRackPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ItemColor[][] theTableau = generateTableau();
-                saveTableau(theTableau); // temp
-                if(theTableau == null) {
+                if (theTableau == null) {
                     System.out.println("The tableau is not fully defined; cannot solve yet.");
                 } else {
-                    saveTableau(theTableau);
-                    LifoSort.solvePuzzle(theTableau);
+                    if(validateTableau(theTableau)) { // If not, complaints will be expressed from there.
+                        solvePuzzle(theTableau);
+                    }
                 }
             }
         });
@@ -290,17 +294,69 @@ public class TubeRackPanel extends JPanel {
         return southPanel;
     }
 
-    void clearAllTubes() {
+    static boolean validateTableau(ItemColor[][] theTableau) {
+        // Create a list of colors from the tableau
+        ArrayList<String> colors = new ArrayList<>();
+        for (ItemColor[] tube : theTableau) {
+            for (int j = 0; j < 4; j++) {
+                ItemColor itemColor = tube[j];
+                if(itemColor != null) colors.add(itemColor.name());
+            }
+        }
+
+        // Collect the number of occurrences of each color in the list
+        Map<String, Integer> colorCount = new HashMap<>();
+        for (String aColor : colors) {
+            Integer j = colorCount.get(aColor);
+            colorCount.put(aColor, (j == null) ? 1 : j + 1);
+        }
+
+        // Display the occurrence count of each color in the arraylist
+        boolean allGood = true;
+        for (Map.Entry<String, Integer> val : colorCount.entrySet()) {
+            int theCount = val.getValue();
+            System.out.println("Element " + val.getKey() + " "
+                    + "occurs"
+                    + ": " + theCount + " times");
+            if(theCount != 4) allGood = false;
+        }
+        System.out.println();
+        return allGood;
+    }
+
+    private boolean activateFirstAvailableTube() {
         ColumnPanel centerPanel;
-        if(layoutChoice.getText().startsWith("11")) {
+        if (layoutChoice.getText().startsWith("11")) {
             centerPanel = centerPanel11;
         } else {
             centerPanel = centerPanel14;
         }
-        for(int i=0; i<centerPanel.getComponentCount(); i++) {
+        for (int i = 0; i < centerPanel.getComponentCount(); i++) {
             JComponent tmpComponent = (JComponent) centerPanel.getComponent(i);
-            if(tmpComponent instanceof JPanel) {
-                for(int j=0; j<tmpComponent.getComponentCount(); j++) {
+            if (tmpComponent instanceof JPanel) {
+                for (int j = 0; j < tmpComponent.getComponentCount(); j++) {
+                    TubeComponent tubeComponent = (TubeComponent) tmpComponent.getComponent(j);
+                    if(!tubeComponent.full() && tubeComponent.isEnabled()) {
+                        tubeComponent.setActive(true);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    void clearAllTubes() {
+        ColumnPanel centerPanel;
+        if (layoutChoice.getText().startsWith("11")) {
+            centerPanel = centerPanel11;
+        } else {
+            centerPanel = centerPanel14;
+        }
+        for (int i = 0; i < centerPanel.getComponentCount(); i++) {
+            JComponent tmpComponent = (JComponent) centerPanel.getComponent(i);
+            if (tmpComponent instanceof JPanel) {
+                for (int j = 0; j < tmpComponent.getComponentCount(); j++) {
                     TubeComponent tubeComponent = (TubeComponent) tmpComponent.getComponent(j);
                     tubeComponent.clear();
                 }
@@ -309,13 +365,14 @@ public class TubeRackPanel extends JPanel {
         revalidate();
     }
 
+    // Create a new tableau from the currently (fully) populated TubeRackPanel
     private ItemColor[][] generateTableau() {
         int tubeCount;
         int tubeCapacity = 4;
         ItemColor[][] theTableau;
 
         ColumnPanel centerPanel;
-        if(layoutChoice.getText().startsWith("11")) {
+        if (layoutChoice.getText().startsWith("11")) {
             tubeCount = 11;
             theTableau = new ItemColor[tubeCount][tubeCapacity];
             theTableau[9] = new ItemColor[4];
@@ -330,15 +387,16 @@ public class TubeRackPanel extends JPanel {
         }
 
         int theIndex = 0; // The tubes are in two visual rows; we need to keep track of which one we're on.
-        for(int i=0; i<centerPanel.getComponentCount(); i++) { // Expecting 3 items (rows), first and third being Panels;
+        for (int i = 0; i < centerPanel.getComponentCount(); i++) { // Expecting 3 items (rows), first and third being Panels;
             JComponent tmpComponent = (JComponent) centerPanel.getComponent(i);
-            if(tmpComponent instanceof JPanel) {   // upperTubeRow or lowerTubeRow
-                for(int j=0; j<tmpComponent.getComponentCount(); j++) {
+            if (tmpComponent instanceof JPanel) {   // upperTubeRow or lowerTubeRow
+                for (int j = 0; j < tmpComponent.getComponentCount(); j++) {
                     TubeComponent tubeComponent = (TubeComponent) tmpComponent.getComponent(j);
-                    ItemColor[] theContent = tubeComponent.getContentArray();
-                    if(theContent == null) return null;
+                    ItemColor[] theContent = tubeComponent.getContentArray(); // Can be null, if any item in it is the background color.
+                    if (theContent == null) return null;
                     theTableau[theIndex++] = theContent;
-                    if(theIndex >= tubeCount-2) break;  // I don't ever expect '>', but this rules out external forces.
+                    if (theIndex >= tubeCount - 2)
+                        break;  // I don't ever expect '>', but this rules out external forces.
                 }
             }
         }
@@ -357,11 +415,10 @@ public class TubeRackPanel extends JPanel {
         add(westPanel, BorderLayout.WEST);
         add(eastPanel, BorderLayout.EAST);
 
-        if(source.getText().equals("11 Tubes")) {
+        if (source.getText().equals("11 Tubes")) {
             add(centerPanel11, BorderLayout.CENTER);
             add(southPanel11, BorderLayout.SOUTH);
-        }
-        else {
+        } else {
             add(centerPanel14, BorderLayout.CENTER);
             add(southPanel14, BorderLayout.SOUTH);
         }
@@ -371,12 +428,57 @@ public class TubeRackPanel extends JPanel {
     }
 
     private void saveTableau(ItemColor[][] theTableau) {
-        String theDateTime = LocalDateTime.now().toString();
-        System.out.println("");
-        String currentDirectory;
-        File file = new File(theDateTime);
-        currentDirectory = file.getAbsolutePath();
-        System.out.println("Current working directory : "+currentDirectory);
+
+        // Enter a filename using BufferdReader
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.print("Enter the filename in which to store the tableau: ");
+        String name = null;
+        try {
+            name = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (name == null || name.isEmpty()) name = LocalDateTime.now().toString();
+        if ((name.length() < 5) && (Integer.parseInt(name) > 0)) {
+            name = "setup" + name;
+        }
+        name = name + ".txt";
+        File file = new File(name); // Only used to show the path...
+        String absolutePath = file.getAbsolutePath();
+        System.out.println("Storing tableau here : " + absolutePath);
+
+        int tubeCount = theTableau.length;
+        int tubeCapacity = theTableau[0].length;
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(name));
+            String tmpString = "ItemColor[][] initialTableau = new ItemColor[" + tubeCount + "][" + tubeCapacity + "];\n";
+            writer.write(tmpString);
+
+            for (int i = 0; i < tubeCount - 2; i++) {
+                tmpString = "initialTableau[" + i + "] = new ItemColor[]{ItemColor." + theTableau[i][0].name() +
+                        ", ItemColor." + theTableau[i][1].name() + ", ItemColor." + theTableau[i][2].name() +
+                        ", ItemColor." + theTableau[i][3].name() + "};\n";
+                writer.append(tmpString);
+            }
+            tmpString = "initialTableau[" + (tubeCount - 2) + "] = new ItemColor[4];\n";
+            writer.append(tmpString);
+            tmpString = "initialTableau[" + (tubeCount - 1) + "] = new ItemColor[4];\n";
+            writer.append(tmpString);
+
+            writer.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+
     }
+
+    private void solvePuzzle(ItemColor[][] theTableau) {
+        saveTableau(theTableau);
+        LifoSort.solvePuzzle(theTableau);
+    }
+
 
 }

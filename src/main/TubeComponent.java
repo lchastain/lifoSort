@@ -93,7 +93,7 @@ public class TubeComponent extends JPanel implements MouseListener {
         g.setColor(lineColor);
         g.drawRect(0, 0, tubeWidth, tubeHeight);  // additional thickness
         g.drawRect(1, 1, tubeWidth - 2, tubeHeight - 2);
-        if(lineColor == Color.LIGHT_GRAY) {
+        if (lineColor == Color.LIGHT_GRAY) {
             g.fillRect(1, 1, tubeWidth - 2, tubeHeight - 2);
         }
     }
@@ -115,10 +115,7 @@ public class TubeComponent extends JPanel implements MouseListener {
             TubeRackPanel.activeTube.repaint();
         }
 
-        if (lineColor == Color.WHITE) lineColor = Color.RED;
-        else lineColor = Color.WHITE;
-        TubeRackPanel.activeTube = this;
-        repaint();
+        setActive(lineColor == Color.WHITE);
     }
 
     public void mouseEntered(java.awt.event.MouseEvent mouseEvent) {
@@ -130,31 +127,58 @@ public class TubeComponent extends JPanel implements MouseListener {
 
     @Override
     public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
         removeMouseListener(this);
         lineColor = Color.LIGHT_GRAY;
         repaint();
     }
 
+    // If a tube somehow got overfilled, this method will not fail because
+    // it only cares about the first four ColorBalls in the container.
     public ItemColor[] getContentArray() {
         ItemColor[] theArray = new ItemColor[4];
         ColorBall tmpBall;
 
-        tmpBall =  (ColorBall) getComponent(0);
-        if(tmpBall.theColor == theBackground) return null;
+        tmpBall = (ColorBall) getComponent(0);
+        if (tmpBall.theColor == theBackground) return null;
         else theArray[0] = tmpBall.getItemColor();
 
-        tmpBall =  (ColorBall) getComponent(1);
-        if(tmpBall.theColor == theBackground) return null;
+        tmpBall = (ColorBall) getComponent(1);
+        if (tmpBall.theColor == theBackground) return null;
         else theArray[1] = tmpBall.getItemColor();
 
-        tmpBall =  (ColorBall) getComponent(2);
-        if(tmpBall.theColor == theBackground) return null;
+        tmpBall = (ColorBall) getComponent(2);
+        if (tmpBall.theColor == theBackground) return null;
         else theArray[2] = tmpBall.getItemColor();
 
-        tmpBall =  (ColorBall) getComponent(3);
-        if(tmpBall.theColor == theBackground) return null;
+        tmpBall = (ColorBall) getComponent(3);
+        if (tmpBall.theColor == theBackground) return null;
         else theArray[3] = tmpBall.getItemColor();
 
         return theArray;
+    }
+
+    void setActive(boolean active) {
+        // This tube may or may not be the active one; deactivate it first, in any case.
+        if (TubeRackPanel.activeTube != null) {
+            TubeRackPanel.activeTube.lineColor = Color.WHITE;
+            TubeRackPanel.activeTube.repaint();
+            TubeRackPanel.activeTube = null;
+        }
+
+        if (active) {
+            lineColor = Color.RED;
+            TubeRackPanel.activeTube = this;
+        } else {
+            lineColor = Color.WHITE;
+        }
+        repaint();
+    }
+
+    public boolean full() {
+        for(int i=0; i<4; i++) {
+            if( ((ColorBall) getComponent(i)).theColor == theBackground) return false;
+        }
+        return true;
     }
 }

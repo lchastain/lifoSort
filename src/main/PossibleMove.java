@@ -29,8 +29,8 @@ public class PossibleMove {
     @Override
     public String toString() {
         String theAnsr;
-        theAnsr = theItem + " from tube " + (fromTubeIndex+1) + " slot " + fromSlot +
-                " to tube " + (toTubeIndex+1) + " slot " + toSlot;
+        theAnsr = theItem + " from tube " + (fromTubeIndex+1) + " (slot " + fromSlot +
+                ") to tube " + (toTubeIndex+1) + " (slot " + toSlot + ")";
         return theAnsr;
     }
 }

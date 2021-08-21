@@ -63,7 +63,7 @@ enum ItemColor {
     }
 
     // This is the name formatted for data storage (no spaces)
-    String getItemColorName() {
+    String getOneWordName() {
         return itemColor.replaceAll("\\s", "");
     }
 
@@ -74,7 +74,7 @@ enum ItemColor {
     // This is the pretty-printed version of the item color.
     @Override
     public String toString() {
-        return getItemColorName();
+        return getOneWordName();
     }
 
 }
