@@ -2,6 +2,30 @@ The uppercase of this file name has the effect of disabling the code autocomplet
 Not sure why that is, since the .log extension already does not have an associated file type, but you do get
 the annoyances when the filename and extension are in lowercase.
 
+22-23 Aug 2021
+(after gaining more understanding from debug sessions) -
+When a possible move is tried, a new rack may be created at that time but the
+move that we are trying, that resulted in this new rack, will never be in the new rack's list of possibilities; it will
+only ever be in the rack that spawned the new one.  This is why a new logic path was added, to allow for a bit of
+backward-looking so that when an allowed new move is being tried, we search for it as a possibility in the rack that was
+previously spawned and not in the rack that would be created if this move were to be accepted.  Code was added all
+around, to support - in PossibleMove as well as TubeRack methods and fields.  Times improved minimally in all setups.
+When those new racks finally come up for examination of their possibilities, at least one possibility in each of those
+racks will have already been explored, except for the cases where the rack that was spawned is not allowing any further
+moves, which can occur when there are no possibilities or when all its options are disallowed by moveOne().
+
+21 Aug 2021
+About just accepting the downside of duplicated effort - yes, I could do that and normally would, but at this
+particular point in time we are on the verge of a month-long trip to the U.S. which is going to be a huge disruption in
+my work schedule so I am feeling reluctant to get back to the WordPress site, yet there are still > 3 weeks to go
+before the trip.  So you see what I'm getting at - I will stay on this project and refine it while I can.  Have now had
+new ideas about adding a list to each rack, of the follow-on racks that it has created, and when a possibility is
+explored, go into that rack and mark it as 'explored'.  Then when the rack is examined in the normal flow, if that poss
+had already been explored it can be skipped.  Will probably need to also work on the PossibleMove class.  The key to
+this proposed approach is that the overall list and the local list of Racks are just lists of references, so unlike
+graphical components that can only go into one container, those references can be held in more than one logical list.
+Will (re-)start soon...
+
 20 Aug 2021
 A long, intensive study of the output finally led me to a problem in the initial setup, that propagated itself over
 to the hardcoded solution as well.  To prevent that in future runs, added a validateTableau() method that will run

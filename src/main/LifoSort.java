@@ -39,16 +39,18 @@ public class LifoSort {
 
 
     private static ItemColor[][] setup() {
-//        return setup646();  // This is a fast one (should be, if no errors have been introduced)
-//        return setup647();
-//        return setup648();
-//        return setup649();
-//        return setup651();
-//        return setup652();
-        return setup653();  // 40 Seconds
+        // Running in debug mode can add ~1 minute for every 8 minutes of a non-debug run.
+        // Times noted below are for non-debug runs, but the amount of console output also has an effect.
+        //
+//        return setup646();  // 13 seconds
+//        return setup647();  //  7 minutes and 18 seconds
+//        return setup648();  // 19 seconds
+//        return setup649();  //  4 minutes and 5 seconds
+        return setup651();  // 21 minutes and 30 seconds
+//        return setup652();  // 31 seconds
+//        return setup653();  // 37 Seconds
     }
 
-    // This sets the starting point for the solution to follow -
     private static ItemColor[][] setup646() {
         // Set the initial data.  This might eventually come from a file, or user input (but that would be quite tedious).
         tubeCount = 11;
@@ -357,130 +359,6 @@ Elapsed: 8 and 4 seconds.
         initialTableau[13] = new ItemColor[4];
 
         return initialTableau;
-        /* end of the run:
-Exploring possibilities for rack # 27798 of 60722
-Looking at each of 3 possible moves after this sequence:
-1.  From tube 4, move Green (#1) to tube 13 (#4)
-2.  From tube 9, move SkyBlue (#1) to tube 14 (#4)
-3.  From tube 7, move Green (#1) to tube 13 (#3)
-4.  From tube 7, move Green (#2) to tube 13 (#2)
-5.  From tube 7, move SkyBlue (#3) to tube 14 (#3)
-6.  From tube 11, move SkyBlue (#1) to tube 14 (#2)
-7.  From tube 2, move Red (#1) to tube 11 (#1)
-8.  From tube 3, move Purple (#1) to tube 2 (#1)
-9.  From tube 10, move Pink (#1) to tube 3 (#1)
-10.  From tube 7, move Gray (#4) to tube 10 (#1)
-11.  From tube 2, move Purple (#1) to tube 7 (#4)
-12.  From tube 2, move Purple (#2) to tube 7 (#3)
-13.  From tube 2, move Yellow (#3) to tube 4 (#1)
-14.  From tube 2, move PaleGreen (#4) to tube 9 (#1)
-15.  From tube 1, move Orange (#1) to tube 2 (#4)
-16.  From tube 5, move Orange (#1) to tube 2 (#3)
-17.  From tube 6, move Purple (#1) to tube 7 (#2)
-18.  From tube 6, move Orange (#2) to tube 2 (#2)
-19.  From tube 8, move Purple (#1) to tube 7 (#1) - Sorted!
-20.  From tube 8, move Blue (#2) to tube 6 (#2)
-21.  From tube 12, move Brown (#1) to tube 5 (#1)
-22.  From tube 12, move LimeGreen (#2) to tube 1 (#1)
-23.  From tube 4, move Yellow (#1) to tube 8 (#2)
-24.  From tube 4, move Yellow (#2) to tube 8 (#1)
-25.  From tube 1, move LimeGreen (#1) to tube 4 (#2)
-26.  From tube 1, move LimeGreen (#2) to tube 4 (#1)
-27.  From tube 1, move Green (#3) to tube 13 (#1) - Sorted!
-28.  From tube 9, move PaleGreen (#1) to tube 1 (#3)
-29.  From tube 9, move PaleGreen (#2) to tube 1 (#2)
-30.  From tube 9, move SkyBlue (#3) to tube 14 (#1) - Sorted!
-31.  From tube 9, move Orange (#4) to tube 2 (#1) - Sorted!
-32.  From tube 3, move Pink (#1) to tube 9 (#4)
-33.  From tube 3, move Pink (#2) to tube 9 (#3)
-34.  From tube 3, move Pink (#3) to tube 9 (#2)
-35.  From tube 11, move Red (#1) to tube 3 (#3)
-36.  From tube 11, move Red (#2) to tube 3 (#2)
-37.  From tube 5, move Brown (#1) to tube 11 (#2)
-38.  From tube 5, move Brown (#2) to tube 11 (#1)
-39.  From tube 5, move PaleGreen (#3) to tube 1 (#1) - Sorted!
-40.  From tube 10, move Gray (#1) to tube 5 (#3)
-41.  From tube 10, move Gray (#2) to tube 5 (#2)
-42.  From tube 10, move Red (#3) to tube 3 (#1) - Sorted!
-43.  From tube 10, move Blue (#4) to tube 6 (#1) - Sorted!
-44.  From tube 12, move Yellow (#3) to tube 10 (#4)
-45.  From tube 8, move Yellow (#1) to tube 10 (#3)
-46.  From tube 8, move Yellow (#2) to tube 10 (#2)
-47.  From tube 8, move Yellow (#3) to tube 10 (#1) - Sorted!
-48.  From tube 11, move Brown (#1) to tube 8 (#3)
-49.  From tube 11, move Brown (#2) to tube 8 (#2)
-50.  From tube 11, move Brown (#3) to tube 8 (#1) - Sorted!
-Considering possible move #1 of 3: LimeGreen from tube 4 slot 1 to tube 11 slot 3
-Trying 51.  From tube 4, move LimeGreen (#1) to tube 11 (#3)
-Attempted move #51 of rack #27798 results in a duplicate tableau of rack number 27799
-Considering possible move #2 of 3: Pink from tube 9 slot 2 to tube 12 slot 3
-Trying 51.  From tube 12, move Pink (#4) to tube 9 (#1) - Sorted!
-Trying 52.  From tube 4, move LimeGreen (#1) to tube 11 (#3)
-Trying 53.  From tube 4, move LimeGreen (#2) to tube 11 (#2)
-Trying 54.  From tube 4, move LimeGreen (#3) to tube 11 (#1) - Sorted!
-Trying 55.  From tube 4, move Gray (#4) to tube 5 (#1) - Sorted!
-
-The rack is completely sorted!
-1.  From tube 4, move Green (#1) to tube 13 (#4)
-2.  From tube 9, move SkyBlue (#1) to tube 14 (#4)
-3.  From tube 7, move Green (#1) to tube 13 (#3)
-4.  From tube 7, move Green (#2) to tube 13 (#2)
-5.  From tube 7, move SkyBlue (#3) to tube 14 (#3)
-6.  From tube 11, move SkyBlue (#1) to tube 14 (#2)
-7.  From tube 2, move Red (#1) to tube 11 (#1)
-8.  From tube 3, move Purple (#1) to tube 2 (#1)
-9.  From tube 10, move Pink (#1) to tube 3 (#1)
-10.  From tube 7, move Gray (#4) to tube 10 (#1)
-11.  From tube 2, move Purple (#1) to tube 7 (#4)
-12.  From tube 2, move Purple (#2) to tube 7 (#3)
-13.  From tube 2, move Yellow (#3) to tube 4 (#1)
-14.  From tube 2, move PaleGreen (#4) to tube 9 (#1)
-15.  From tube 1, move Orange (#1) to tube 2 (#4)
-16.  From tube 5, move Orange (#1) to tube 2 (#3)
-17.  From tube 6, move Purple (#1) to tube 7 (#2)
-18.  From tube 6, move Orange (#2) to tube 2 (#2)
-19.  From tube 8, move Purple (#1) to tube 7 (#1) - Sorted!
-20.  From tube 8, move Blue (#2) to tube 6 (#2)
-21.  From tube 12, move Brown (#1) to tube 5 (#1)
-22.  From tube 12, move LimeGreen (#2) to tube 1 (#1)
-23.  From tube 4, move Yellow (#1) to tube 8 (#2)
-24.  From tube 4, move Yellow (#2) to tube 8 (#1)
-25.  From tube 1, move LimeGreen (#1) to tube 4 (#2)
-26.  From tube 1, move LimeGreen (#2) to tube 4 (#1)
-27.  From tube 1, move Green (#3) to tube 13 (#1) - Sorted!
-28.  From tube 9, move PaleGreen (#1) to tube 1 (#3)
-29.  From tube 9, move PaleGreen (#2) to tube 1 (#2)
-30.  From tube 9, move SkyBlue (#3) to tube 14 (#1) - Sorted!
-31.  From tube 9, move Orange (#4) to tube 2 (#1) - Sorted!
-32.  From tube 3, move Pink (#1) to tube 9 (#4)
-33.  From tube 3, move Pink (#2) to tube 9 (#3)
-34.  From tube 3, move Pink (#3) to tube 9 (#2)
-35.  From tube 11, move Red (#1) to tube 3 (#3)
-36.  From tube 11, move Red (#2) to tube 3 (#2)
-37.  From tube 5, move Brown (#1) to tube 11 (#2)
-38.  From tube 5, move Brown (#2) to tube 11 (#1)
-39.  From tube 5, move PaleGreen (#3) to tube 1 (#1) - Sorted!
-40.  From tube 10, move Gray (#1) to tube 5 (#3)
-41.  From tube 10, move Gray (#2) to tube 5 (#2)
-42.  From tube 10, move Red (#3) to tube 3 (#1) - Sorted!
-43.  From tube 10, move Blue (#4) to tube 6 (#1) - Sorted!
-44.  From tube 12, move Yellow (#3) to tube 10 (#4)
-45.  From tube 8, move Yellow (#1) to tube 10 (#3)
-46.  From tube 8, move Yellow (#2) to tube 10 (#2)
-47.  From tube 8, move Yellow (#3) to tube 10 (#1) - Sorted!
-48.  From tube 11, move Brown (#1) to tube 8 (#3)
-49.  From tube 11, move Brown (#2) to tube 8 (#2)
-50.  From tube 11, move Brown (#3) to tube 8 (#1) - Sorted!
-51.  From tube 12, move Pink (#4) to tube 9 (#1) - Sorted!
-52.  From tube 4, move LimeGreen (#1) to tube 11 (#3)
-53.  From tube 4, move LimeGreen (#2) to tube 11 (#2)
-54.  From tube 4, move LimeGreen (#3) to tube 11 (#1) - Sorted!
-55.  From tube 4, move Gray (#4) to tube 5 (#1) - Sorted!
-Started: 2021-08-18T11:09:30.469527300
-Ended: 2021-08-18T11:13:59.801322700
-Elapsed: 4 minutes and 29 seconds.
-
-         */
     }
 
     private static ItemColor[][] setup651() {  // 24 minutes and 16 seconds
@@ -878,7 +756,7 @@ Elapsed: 31 seconds.
         while (true) {
             System.out.println("\nExploring possibilities for rack # " + (currentRackIndex + 1) + " of " + rackList.size());
             currentRack.explorePossibilities();
-            if (currentRack.sorted()) break;
+            if (currentRack.sorted()) break; // Needed by graphical mode; text mode ends the app upon fully sorting a rack.
             currentRackIndex++;
 
             if (currentRackIndex == rackList.size()) {

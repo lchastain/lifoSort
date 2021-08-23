@@ -16,6 +16,8 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
     ArrayList<String> previousMoves;
     ArrayList<String> currentRun;
     int rackNumber;
+    PossibleMove trialMove;
+    TubeRack spawnedRack;  // The most recent new rack that this rack has created during possibility exploration.
 
     public TubeRack(ItemColor[][] rackContent, ArrayList<String> movesUpToThisTableau) {
         super();
@@ -26,12 +28,8 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         previousMoves = new ArrayList<>(movesUpToThisTableau);
         possibleMoves = new ArrayList<>();
 
-        rackNumber = 1;
-        // Right now we are not yet fully constructed (but will be, eventually).
-        // The point is, this rack has not yet been added to the list, so when calculating
-        //    what our rack number will be, we need to take one more than the current size
-        //    of the rack list.
-        if (LifoSort.rackList != null) rackNumber = LifoSort.rackList.size() + 1;
+        // Determine our rack 'number' from the size of the rack list.
+        rackNumber = (LifoSort.rackList == null) ? 1: LifoSort.rackList.size() + 1;
 
         findPossibilities(); // The very first tableau will always have (tubeCount-2) possibilities.
 //        System.out.println("Found " + possibleMoves.size() + " possible moves in TubeRack #" + rackNumber);
@@ -49,14 +47,18 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
     boolean popAndPush(TestTube<ItemColor> aTube) {
         TestTube<ItemColor> sourceTube = get(sourceTubeIndex);
 
-        String theMove = "Move " + sourceValue + " from tube " + sourceTube.tubeNumber +
-                " (slot " + ((tubeCapacity + 1) - (sourceTube.size())) +
-                ") to tube " + aTube.tubeNumber + " (slot " +
-                (tubeCapacity - aTube.size()) + ")";
+        int fromSlot = tubeCapacity + 1 - sourceTube.size();
+        int toSlot = tubeCapacity - aTube.size();
+        trialMove = new PossibleMove(sourceValue, sourceTubeIndex, fromSlot, aTube.tubeNumber-1, toSlot );
+//        String theMove = "Move " + sourceValue + " from tube " + sourceTube.tubeNumber +
+//                " (slot " + fromSlot + ") to tube " + aTube.tubeNumber + " (slot " + toSlot + ")";
+
+        String theMove = "Move " + trialMove;  // implicit .toString()
 
         if (currentRun.contains(theMove)) {
             return false;
         }
+
         sourceTube.pop(); // We already know the value; this is just to get it off the stack.
         ItemColor theResult = aTube.push(sourceValue);
         if (theResult == null) { // This is what we do NOT expect, but handling it nevertheless.
@@ -75,7 +77,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
 
     // loop thru the possibleMoves list
     void explorePossibilities() {
-        int possibilityNum = 1;
+        int possibilityNum = 0;
         int possibilityCount = possibleMoves.size();
         if (possibilityCount > 0) {
             System.out.print("Looking at each of " + possibilityCount + " possible moves");
@@ -90,13 +92,19 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         }
 
         for (PossibleMove possibleMove : possibleMoves) {
-            if (possibilityNum > 1) loadRack(); // Rack needs reset after each possibility is explored.
+            possibilityNum++;
+            if(possibleMove.explored) {
+                System.out.println("Possible move #" + possibilityNum + " has already been explored (" + possibleMove + ")");
+                continue;
+            }
+            System.out.println("Considering possible move #" + possibilityNum + " of " + possibilityCount + ": " + possibleMove);
 
-            System.out.println("Considering possible move #" + possibilityNum++ + " of " + possibilityCount + ": " + possibleMove);
             sourceValue = possibleMove.theItem;
             sourceTubeIndex = possibleMove.fromTubeIndex;
+            if (possibilityNum > 1) loadRack(); // Rack needs reset before each new possibility is explored.
             explorePossibility();
-            if(sorted()) return; // This happens when run from the graphical user setup.
+            possibleMove.explored = true; // This can be relevant even in the same rack, when two or more moves can be made in different orders.
+            if(sorted()) return; // This happens when run from the graphical user setup, because otherwise the app would have ended upon rack sorted.
         }
     } // end explorePossibilities
 
@@ -104,49 +112,54 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
     // This method makes a 'possible' move and then explores follow-on moves in a depth-first approach.
     void explorePossibility() {
         int numberOfMoves = previousMoves.size();
-        currentRun = new ArrayList<>();
+        currentRun = new ArrayList<>(); // The list of moves that are being made/considered, starting with 'this' one.
         while (!sorted()) {  // Either we find a solution or bail out after determining that the possibility does not pan out.
             if (moveOne()) { // If we did move one, that move was added to the currentRun list by popAndPush()
-                // Keep track of how many moves are in the current possibility -
-                numberOfMoves++;
+                // Keep track of how many moves (from the very start) are in the current possibility checkout sequence -
+                numberOfMoves++;  // This will be the count of previous moves plus the moves in the current run.
 
-                // Print out the move we just made -
-                System.out.println("Trying " + numberOfMoves + ".  " + currentRun.get(currentRun.size() - 1)); // Move <color & slot> to tube y <slot>
+                if(spawnedRack != null) {
+                    spawnedRack.eliminatePossibility(trialMove);
+                }
 
-//                System.out.println("Resulting in a new rack: ");
-//                showRack();
-//                System.out.println("------- after " + numberOfMoves + " moves --------------\n");
 
-                // Get the new state of the rack, to (possibly) be used to create a new rack that starts at this point.
+                // Print out the move we just made (which changed the tableau that this rack is holding)
+                System.out.println("  trying " + numberOfMoves + ".  " + trialMove); // Move color from tube x (slot) to tube y (slot)
+
+                // Get the new tableau of this rack.
                 ItemColor[][] newTableau = getCurrentTableau();
-//                System.out.println("The new tableau: ");
-//                LifoSort.showTableau(newTableau);
 
-                // Now, before we add a new TubeRack to our worklist, verify that we don't already have one
-                //   with the exact same tableau already in the list.
-                for (TubeRack tubeRack : LifoSort.rackList) {
+                // Verify that we don't already have a rack with this same new tableau.
+                for (TubeRack tubeRack : LifoSort.rackList) {  // Search the existing rack list
                     if (Arrays.deepEquals(newTableau, tubeRack.rackContent)) {
                         System.out.println("  attempted move #" + numberOfMoves + " of rack #" + rackNumber + " results in a duplicate tableau of rack number " + tubeRack.rackNumber);
-                        // This possibility sequence would follow a circular path; ending it here.
-                        // This move will be explored when it comes up as one of the possibilities for that rack, if it hasn't already.
+                        // This possibility sequence would follow a circular path; ending it here by not allowing a
+                        // duplicate rack to be added to the overall list.
                         return;
                     }
                 }
+                // Make a composite list of all previous moves plus the ones made during this possibility checkout.
                 ArrayList<String> combinedRun = new ArrayList<>(previousMoves);
                 combinedRun.addAll(currentRun);
-                LifoSort.rackList.add(new TubeRack(newTableau, combinedRun));
 
-            } else {
+                // Make a new rack from the new tableau, using the composite list as its 'previous moves' that led to
+                //  its initial layout.  Then add the new rack to the overall list of racks, to eventually be examined.
+                TubeRack tr = new TubeRack(newTableau, combinedRun);
+                System.out.println("  created tube rack #" + tr.rackNumber + " with " + tr.possibleMoves.size() + " possible moves");
+                spawnedRack = tr;
+                LifoSort.rackList.add(tr);
+
+            } else { // We were unable to move the ItemColor from the current tube, so move on to the next tube.
                 sourceTubeIndex++;
             }
 
-            if (sourceTubeIndex + 1 >= tubeCount) {
-                // No more tubes to consider; we need to reset the rack and explore the next possibility.
+            if (sourceTubeIndex + 1 >= tubeCount) { // If we have no more tubes to consider -
+                // then we need to reset the rack and explore the next possibility.
 
                 //showMoves();
                 System.out.println("This possibility sequence has no further available moves.");
                 return;
-            } else {
+            } else { // Get the next ItemColor to be considered.
                 try {
                     sourceValue = get(sourceTubeIndex).peek();
                 } catch (EmptyStackException ese) { // We tried to look at a value from an empty tube; ignore and go on.
@@ -155,6 +168,8 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                 }
             }
         } // end while
+
+        // If we fell out of the 'while' loop and landed here then the solution has been found!
         System.out.println("\nThe rack is completely sorted!");
         showMoves();
         System.out.println("Started: " + LifoSort.localDateTime);
@@ -169,6 +184,18 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         }
         if (LifoSort.textOnly) System.exit(0);  // All Sorted!
     } // end explorePossibility
+
+    private void eliminatePossibility(PossibleMove possibilityToEliminate) {
+        for (int i = 0; i < possibleMoves.size(); i++) {
+            PossibleMove possibleMove = possibleMoves.get(i);
+            //System.out.println("Comparing " + possibleMove + " to " + possibilityToEliminate);
+            if (possibilityToEliminate.toString().equals(possibleMove.toString())) {
+                possibleMove.explored = true;
+                System.out.println("  marked possible move #" + (i+1) + " of rack number " + rackNumber + " as already explored.");
+                return;
+            }
+        }
+    }
 
     private void showMoves() {
         // Print out what we did to get to this point -
@@ -205,20 +232,22 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                 if (i == j) continue;  // Cannot move an item to the same tube that it is coming from.
                 TestTube<ItemColor> destTube = get(j);
                 if (destTube.full()) continue;
-                if (destTube.empty()) {
+                if (destTube.empty()) { // The destination tube is currently empty.
                     // Create a new PossibleMove and add it to the list.
                     // But first verify that we don't already have a move of this item to an empty tube, because there is
                     // no difference when two different tube destinations are both 'empty'; disallow a second one.
                     if (emptyTubeIndex < 0) emptyTubeIndex = j; // Take the first empty.  The other one will be ignored.
-                    if (j == emptyTubeIndex) { // Otherwise it is some other empty tube
-                        // Ideally there would never be more than two empties, anyway.
+                    if (j == emptyTubeIndex) { // Otherwise it is the other empty tube; there are never more than two.
                         PossibleMove possibleMove = new PossibleMove(sourceItem, i, fromSlot, j, tubeCapacity);
                         possibleMoves.add(possibleMove);
                     }
                 } else {
                     ItemColor nextItem = destTube.peek();
                     if (sourceItem.equals(nextItem)) { // Create a new PossibleMove and add it to the list.
-                        // This is not the same math as after an actual move; this move is only being noted at this point.
+                        // This is not the same math as the trials that take place after a move while looking
+                        // deeper; this move is hypothetical for this rack at this point, whereas those moves are
+                        // 'made' while determining whether or not they ultimately lead to a solution, and each
+                        // subsequent one looks at a different tableau/rack.
                         int destSlot = tubeCapacity - destTube.size();
                         PossibleMove possibleMove = new PossibleMove(sourceItem, i, fromSlot, j, destSlot);
                         possibleMoves.add(possibleMove);
@@ -257,9 +286,9 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         }
     } // end loadRack
 
-    // This method will either make one single move, or return a false.  It does not consult the list of possible
-    //   moves because it may be looking 'deeper' than the top level and the first move is the only one that is in the
-    //   possibles for this rack.
+    // This method will either make one single move and return true, or return a false.  It does not consult the list
+    //   of possible moves because it may be looking 'deeper' than the top level and the first move is the only one
+    //   that is in the possibles for this rack.
     // We come here with a sourceTubeIndex and a sourceValue that have already been set in explorePossibility().
     boolean moveOne() {
         int destinationRemainingCapacity;
@@ -322,15 +351,13 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
                     //-------------------------------------------------------------------------------------------
 
                     return popAndPush(aTube);
-//                } else {
-                    // We don't need a 'continue' from here, because we are already at the bottom of the 'for' loop.
+//                } else {  // We don't need an 'else/continue' here, because we are already at the bottom of the loop.
                     // But what it means is - the candidate destination tube was neither full nor empty, but it did
                     // not have as its top value, the same value that we want to push.
                     // Therefore it is disqualified as a potential place to put the sourceValue.
-                    // The only reason we have an 'else' at all is for debug/troubleshooting.  When the
-                    // app is fully functional, this section may be disabled.
-                    // Also - this 'did not move' is different from all the others because it is a move that the game
-                    //   itself does not allow; it does not follow 'the rules'.
+                    // The only reason this section is here is for debug/troubleshooting, so you may find it disabled.
+                    // Also - this 'did not move' notification is different from all the others because it is a move
+                    //   that the game itself does not allow; it does not follow 'the rules'.
 //                    String theMove = "Did not move " + sourceValue + " (#" +
 //                            ((tubeCapacity + 1) - get(sourceTubeIndex).size()) +
 //                            " from tube " + (sourceTubeIndex + 1) +
@@ -362,9 +389,7 @@ public class TubeRack extends ArrayList<TestTube<ItemColor>> {
         }
     }
 
-    // A rack is sorted when every tube has the same content within itself, or is empty.
-    // No need to check if the non-empty ones are full; there are not enough available slots to allow that case and
-    //   yet still show all tubes sorted.
+    // A rack is sorted when every tube is full and has the same content within itself, or is empty.
     boolean sorted() {
         for (TestTube<ItemColor> aTube : this) {
             if (aTube.empty()) continue; // Do not ever check to see if an empty tube is sorted.

@@ -8,15 +8,14 @@ public class PossibleMove {
     //   item at the 'top' of a full tube to be in slot #1, and going up in value from there as you
     //   go further down into the tube.  The slot numbers are tied to positions of the items in the
     //   tube and do not depend on how many items are in the tube, so non-full tubes will not have
-    //   an item in slot 1, and higher number slots of non-full tubes may also be empty.
+    //   an item in slot 1, and may not have items in slots 2 and 3, as well.  Only an empty tube
+    //   will not have an item in slot 4.
     int fromTubeIndex;
     int fromSlot;
     int toTubeIndex;
     int toSlot;
 
     boolean explored;     // Has this move been 'made', or not?
-    // If the move were to be 'made', it would result in a new tableau.     // MOVE THIS TO WHERE A NEW TUBERACK IS CREATED.
-    //  and the corresponding TubeRack will have a whole new list of possible moves.
 
     PossibleMove(ItemColor theItem, int fromTubeIndex, int fromSlot, int toTubeIndex, int toSlot) {
         this.theItem = theItem;
@@ -27,7 +26,7 @@ public class PossibleMove {
     }
 
     @Override
-    public String toString() {
+    public String toString() {  // Ex:  Blue from tube 5 (slot 3) to tube 7 (slot 1)
         String theAnsr;
         theAnsr = theItem + " from tube " + (fromTubeIndex+1) + " (slot " + fromSlot +
                 ") to tube " + (toTubeIndex+1) + " (slot " + toSlot + ")";
