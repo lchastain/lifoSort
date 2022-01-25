@@ -46,7 +46,7 @@ public class LifoSort {
 //        return setup647();  //  7 minutes and 18 seconds
 //        return setup648();  // 19 seconds
 //        return setup649();  //  4 minutes and 5 seconds
-        return setup651();  // 21 minutes and 30 seconds
+        return setup651();  // 21 minutes and 40 seconds
 //        return setup652();  // 31 seconds
 //        return setup653();  // 37 Seconds
     }

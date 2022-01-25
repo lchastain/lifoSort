@@ -6,7 +6,8 @@ the annoyances when the filename and extension are in lowercase.
 (after gaining more understanding from debug sessions) -
 When a possible move is tried, a new rack may be created at that time but the
 move that we are trying, that resulted in this new rack, will never be in the new rack's list of possibilities; it will
-only ever be in the rack that spawned the new one.  This is why a new logic path was added, to allow for a bit of
+only ever be in the rack that spawned the new one, which will not even necessarily be this one, when a trial runs
+deeper than the first level of possible moves.  This is why a new logic path was added, to allow for a bit of
 backward-looking so that when an allowed new move is being tried, we search for it as a possibility in the rack that was
 previously spawned and not in the rack that would be created if this move were to be accepted.  Code was added all
 around, to support - in PossibleMove as well as TubeRack methods and fields.  Times improved minimally in all setups.

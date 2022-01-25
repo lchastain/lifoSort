@@ -440,9 +440,7 @@ public class TubeRackPanel extends JPanel {
             e.printStackTrace();
         }
         if (name == null || name.isEmpty()) name = LocalDateTime.now().toString();
-        if ((name.length() < 5) && (Integer.parseInt(name) > 0)) {
-            name = "setup" + name;
-        }
+        name = "setup_" + name;
         name = name + ".txt";
         File file = new File(name); // Only used to show the path...
         String absolutePath = file.getAbsolutePath();
