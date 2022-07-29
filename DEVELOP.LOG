@@ -1,6 +1,4 @@
-The uppercase of this file name has the effect of disabling the code autocompletion and suggestions as you type.
-Not sure why that is, since the .log extension already does not have an associated file type, but you do get
-the annoyances when the filename and extension are in lowercase.
+
 
 22-23 Aug 2021
 (after gaining more understanding from debug sessions) -
