@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3a8e8299-1e68-41db-89b8-56b2ccb7ddfb" name="Default Changelist" comment="Comment-tweaking only.">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/script/make.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/script/run.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEVELOP.LOG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/colors.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/script/readme.txt" afterDir="false" />
+    <list default="true" id="3a8e8299-1e68-41db-89b8-56b2ccb7ddfb" name="Default Changelist" comment="Updating git content.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +173,8 @@
     <MESSAGE value="Fine-tuning to remove duplicated effort." />
     <MESSAGE value="Adjusted the saved tableau name to allow any text, not just numeric." />
     <MESSAGE value="Comment-tweaking only." />
-    <option name="LAST_COMMIT_MESSAGE" value="Comment-tweaking only." />
+    <MESSAGE value="Updating git content." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating git content." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
