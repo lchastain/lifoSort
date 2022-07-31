@@ -1,0 +1,10 @@
+appData/*
+development/*
+src/eggSamples/*
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear

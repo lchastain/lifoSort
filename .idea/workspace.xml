@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3a8e8299-1e68-41db-89b8-56b2ccb7ddfb" name="Default Changelist" comment="Comment-tweaking only.">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/make.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/run.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEVELOP.LOG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/colors.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/script/readme.txt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="1wq7Wxl3ImaVSejXQjavFpfglh1" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/appData" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Lee\workspace\lifoSort\appData" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Lee\workspace\lifoSort\appData" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.LifoSort Hardcoded Layout">
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method />
+    </configuration>
+    <configuration name="LifoSort Graphical Layout" type="Application" factoryName="Application">
+      <output_file path="lifosort_run.txt" is_save="true" />
+      <option name="MAIN_CLASS_NAME" value="LifoSort" />
+      <module name="lifoSort" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LifoSort Hardcoded Layout" type="Application" factoryName="Application">
+      <output_file path="lifosort_run.txt" is_save="true" />
+      <option name="MAIN_CLASS_NAME" value="LifoSort" />
+      <module name="lifoSort" />
+      <option name="PROGRAM_PARAMETERS" value="-text" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.LifoSort Hardcoded Layout" />
+      <item itemvalue="Application.LifoSort Graphical Layout" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a8e8299-1e68-41db-89b8-56b2ccb7ddfb" name="Default Changelist" comment="" />
+      <created>1629174301478</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1629174301478</updated>
+    </task>
+    <task id="LOCAL-00001" summary="New mass commit after directory move.">
+      <created>1629174427871</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1629174427871</updated>
+    </task>
+    <task id="LOCAL-00002" summary="A working solution, and the UI for the user, with some validation on entry values.">
+      <created>1629541467200</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1629541467200</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fine-tuning to remove duplicated effort.">
+      <created>1629704604908</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1629704604908</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Adjusted the saved tableau name to allow any text, not just numeric.">
+      <created>1643074106102</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1643074106102</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.bat" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="New mass commit after directory move." />
+    <MESSAGE value="A working solution, and the UI for the user, with some validation on entry values." />
+    <MESSAGE value="Fine-tuning to remove duplicated effort." />
+    <MESSAGE value="Adjusted the saved tableau name to allow any text, not just numeric." />
+    <MESSAGE value="Comment-tweaking only." />
+    <option name="LAST_COMMIT_MESSAGE" value="Comment-tweaking only." />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="currentRun" language="JAVA" />
+        <watch expression="previousMoves" language="JAVA" />
+        <watch expression="possibleMove" language="JAVA" />
+        <watch expression="rackNumber" language="JAVA" />
+        <watch expression="spawnedRack.possibleMoves" language="JAVA" />
+        <watch expression="possibleMoves" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
